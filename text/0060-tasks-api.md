@@ -568,6 +568,151 @@ New task types are also added for these operations. `indexCreation`, `indexUpdat
 }
 ```
 
+#### 9. Filtering task resources
+
+The `/tasks` and `index/{indexUid}/tasks` endpoints are filterable by type and status query parameters.
+
+##### 9.1. Query parameters definition
+
+| parameter | type | required | description                         |
+|------|------|----------|----------------------------|
+| status | string | No | Possible values are all the status of a task. By default, when `status` query parameter is not set, all task statuses are returned. |
+| type  | string | No | Possible values are all the types of a task. By default, when `type` is not set in, all task types are returned.  |
+
+##### 9.2. Usages examples
+
+This part demonstrates filtering on `/tasks`, it should be equivalent for `indexes/:uid/tasks`.
+
+---
+
+**No filtering**
+
+`GET` - `/tasks`
+
+```json
+{
+    "results": [
+        {
+            "uid": 1350,
+            "indexUid": "movies",
+            "status": "failed",
+            "type": "documentAddition",
+            ...,
+        },
+        ...,
+        {
+            "uid": 1330,
+            "indexUid": "movies_reviews",
+            "status": "succeeded",
+            "type": "documentDeletion",
+            ...
+        }
+    ],
+    ...
+}
+```
+
+**Filter `tasks` that have a `failed` `status`**
+
+`GET` - `/tasks?status=failed`
+
+```json
+{
+    "results": [
+        {
+            "uid": 1350,
+            "indexUid": "movies",
+            "status": "failed",
+            "type": "documentAddition",
+            ...,
+        },
+        ...,
+        {
+            "uid": 1279,
+            "indexUid": "movies",
+            "status": "failed",
+            "type": "settingsUpdate",
+            ...,
+        }
+    ],
+    ...
+}
+```
+
+**Filter `tasks` that are of `documentAddition` type**
+
+`GET` - `/tasks?type=documentAddition`
+
+```json
+{
+    "results": [
+        {
+            "uid": 1350,
+            "indexUid": "movies",
+            "status": "failed",
+            "type": "documentAddition",
+            ...,
+        },
+        ...,
+        {
+            "uid": 1343,
+            "indexUid": "movies",
+            "type": "succeeded",
+            "type": "documentAddition",
+            ...,
+        }
+    ],
+    ...
+}
+```
+
+- 💡 `status` and `type` can be used together. The two parameters are cumulated and a `AND` operation is performed between the two filters.
+
+**Filter `tasks` that are of `documentAddition` type and have a `failed` status**
+
+`GET` - `/tasks?type=documentAddition&status=failed`
+
+```json
+{
+    "results": [
+        {
+            "uid": 1350,
+            "indexUid": "movies",
+            "status": "failed",
+            "type": "documentAddition",
+            ...,
+        },
+        ...,
+        {
+            "uid": 1346,
+            "indexUid": "movies",
+            "status": "failed",
+            "type": "documentAddition",
+            ...,
+        }
+    ],
+    ...
+}
+```
+
+- `type` and `status` query parameters can be read as is `type=documentsAddition AND status=failed`.
+
+---
+
+##### 9.3. Behaviors for `status` and `type` query parameters.
+
+###### 9.3.1. `status`
+
+- 🔴 If the `status` parameter value is not consistent with one of the task statuses, an `invalid_task_status` error is returned.
+
+###### 9.3.2. `type`
+
+- 🔴 If the `type` parameter value is not consistent with one of the task types, an `invalid_task_type` error is returned.
+
+##### 9.4. Empty `results`
+
+If no results match the filters. A response is returned with an empty `results` array.
+
 ## 2. Technical details
 
 ### I. Measuring
