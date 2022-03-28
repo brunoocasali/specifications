@@ -209,17 +209,15 @@ Adds a `_matchesInfo` object to the search response that contains the location o
 
 #### 1.2.2. Search response
 
-| Field                   | Type                         | Required |
-|-------------------------|------------------------------|----------|
-| hits                    | Array[Hit]                   | True     |
-| limit                   | Integer                      | True     |
-| offset                  | Integer                      | True     |
-| nbHits                  | Integer                      | True     |
-| exhaustiveNbHits        | Boolean                      | True     |
-| facetsDistribution      | Object                       | False    |
-| exhaustiveFacetsCount   | Boolean                      | False    |
-| processingTimeMs        | Integer                      | True     |
-| query                   | String                       | True     |
+| Field                    | Type                         | Required |
+|--------------------------|------------------------------|----------|
+| hits                     | Array[Hit]                   | True     |
+| limit                    | Integer                      | True     |
+| offset                   | Integer                      | True     |
+| approximativeNbHits      | Integer                      | True     |
+| facetsDistribution       | Object                       | False    |
+| processingTimeMs         | Integer                      | True     |
+| query                    | String                       | True     |
 
 ##### 1.2.2.1 `hits`
 
@@ -250,23 +248,14 @@ Gives the `offset` search parameter used for the query.
 
 > See 1.2.1.6 `offset` section.
 
-##### 1.2.2.4 `nbHits`
+##### 1.2.2.4 `approximativeNbHits`
 
 - Type: Integer
 - Required: True
 
-Returns the total number of candidates for the search query.
+Returns the approximated number of candidates for the search query.
 
-##### 1.2.2.5 `exhaustiveNbHits`
-
-- Type: Boolean
-- Required: True
-
-Whether `nbHits` is exhaustive.
-
-> Always return `false`.
-
-##### 1.2.2.6 `facetsDistribution`
+##### 1.2.2.5 `facetsDistribution`
 
 - Type: Object
 - Required: False
@@ -276,23 +265,14 @@ Added to the search response when `facetsDistribution` is set for a search query
 > See 1.2.1.4 `facetsDistribution` section.
 > See [Filter And Facet Behavior](0027-filter-and-facet-behavior.md)
 
-##### 1.2.2.7 `exhaustiveFacetsCount`
-
-- Type: Boolean
-- Required: False
-
-Whether `facetsDistribution` count is exhaustive. The field `exhaustiveFacetsCount` is added when `facetsDistribution` is set as a search parameter.
-
-> Always returns `false`.
-
-##### 1.2.2.7 `processingTimeMs`
+##### 1.2.2.6 `processingTimeMs`
 
 - Type: Integer
 - Required: True
 
 Processing time of the search query in milliseconds.
 
-##### 1.2.2.8 `query`
+##### 1.2.2.7 `query`
 
 - Type: String
 - Required: True
@@ -302,7 +282,7 @@ Query originating the response. Equals to the `q` search parameter.
 
 > See 1.2.1.1 `q` section.
 
-##### 1.2.2.9 `hits` special fields
+##### 1.2.2.8 `hits` special fields
 
 | Field                   | Type        | Required |
 |-------------------------|-------------|----------|
@@ -310,7 +290,7 @@ Query originating the response. Equals to the `q` search parameter.
 | _formatted              | Object      | False    |
 | _matchesInfo            | Object      | False    |
 
-###### 1.2.2.9.1 `_geoDistance`
+###### 1.2.2.8.1 `_geoDistance`
 
 - Type: Integer
 - Required: False
@@ -319,7 +299,7 @@ Search queries using `_geoPoint` will always include a `_geoDistance` field cont
 
 > See [GeoSearch](0059-geo-search.md)
 
-###### 1.2.2.9.2 `_formatted`
+###### 1.2.2.8.2 `_formatted`
 
 - Type: Object
 - Required: False
@@ -328,7 +308,7 @@ Object containing the cropped/highlighted values of the fields specified in `att
 
 > See 1.2.1.8 `attributesToHighlight` section and 1.2.1.9 `attributesToCrop` section.
 
-###### 1.2.2.9.3 `_matchesInfo`
+###### 1.2.2.8.3 `_matchesInfo`
 
 - Type: Object
 - Required: False
